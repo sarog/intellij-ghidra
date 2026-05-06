@@ -1,4 +1,3 @@
-import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 
 fun properties(key: String) = providers.gradleProperty(key)
@@ -57,18 +56,6 @@ intellijPlatform {
                 subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
             }
         }
-        val changelog = project.changelog // local variable for configuration cache compatibility
-        // Get the latest available change notes from the changelog file
-        changeNotes = properties("pluginVersion").map { pluginVersion ->
-            with(changelog) {
-                renderItem(
-                    (getOrNull(pluginVersion) ?: getUnreleased())
-                        .withHeader(false)
-                        .withEmptySections(false),
-                    Changelog.OutputType.HTML,
-                )
-            }
-        }
 
         ideaVersion {
             sinceBuild = properties("pluginSinceBuild")
@@ -89,12 +76,6 @@ intellijPlatform {
         privateKey = environment("PRIVATE_KEY")
         password = environment("PRIVATE_KEY_PASSWORD")
     }
-}
-
-// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-changelog {
-    groups.empty()
-    repositoryUrl = properties("pluginRepositoryUrl")
 }
 
 // Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
@@ -134,9 +115,5 @@ tasks {
         plugins {
             robotServerPlugin()
         }
-    }
-
-    publishPlugin {
-        dependsOn("patchChangelog")
     }
 }
