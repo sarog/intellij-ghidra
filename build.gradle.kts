@@ -25,7 +25,7 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     intellijPlatform {
-        create(properties("platformType"), properties("platformVersion"))
+        intellijIdea(properties("platformVersion"))
         bundledPlugins(properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) })
     }
 //    implementation(libs.annotations)
