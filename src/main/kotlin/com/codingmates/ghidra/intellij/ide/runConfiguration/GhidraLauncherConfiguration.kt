@@ -89,9 +89,7 @@ class GhidraLauncherConfiguration(
         return state.vmParameters
     }
 
-    override fun getWorkingDirectory(): String? {
-        return null
-    }
+    override fun getWorkingDirectory(): String? = state.workingDirectory
 
     override fun isAlternativeJrePathEnabled(): Boolean {
         return state.alternativeJrePathEnabled
@@ -103,8 +101,11 @@ class GhidraLauncherConfiguration(
 
     override fun onNewConfigurationCreated() {
         if (StringUtil.isEmpty(workingDirectory)) {
-            val installationPath = GhidraFacet.findAnyInProject(project).installationPath
-            workingDirectory = FileUtil.toSystemIndependentName(StringUtil.notNullize(installationPath))
+            workingDirectory = FileUtil.toSystemIndependentName(
+                StringUtil.notNullize(
+                    GhidraFacet.findAnyInProject(project)?.installationPath
+                )
+            )
         }
     }
 
@@ -154,10 +155,12 @@ class GhidraLauncherConfiguration(
 
     override fun setProgramParameters(value: String?) {}
     override fun setVMParameters(value: String?) {
-        state.vmParameters = value!!
+        state.vmParameters = value ?: ""
     }
 
-    override fun setWorkingDirectory(value: String?) {}
+    override fun setWorkingDirectory(value: String?) {
+        state.workingDirectory = value
+    }
 
     override fun writeExternal(element: Element) {
         super.writeExternal(element)
@@ -184,6 +187,7 @@ class GhidraLauncherConfiguration(
         var vmParameters: String = "",
         var args: String? = "",
         var isHeadless: Boolean = false,
+        var workingDirectory: String? = null,
     )
 
     init {

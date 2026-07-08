@@ -1,5 +1,6 @@
 package com.codingmates.ghidra.intellij.ide.runConfiguration
 
+import com.intellij.execution.ExecutionException
 import com.intellij.execution.application.BaseJavaApplicationCommandLineState
 import com.intellij.execution.configurations.JavaParameters
 import com.intellij.execution.runners.ExecutionEnvironment
@@ -36,7 +37,16 @@ class GhidraLauncherCommandLineState(
             jrePath
         )
         setupJavaParameters(javaParameters)
+        val cp = javaParameters.classPath.pathList
+        val hasUtility = cp.any { it.endsWith("/Framework/Utility/lib/Utility.jar") || it.endsWith("\\Framework\\Utility\\lib\\Utility.jar") }
+        val hasLog4j = cp.any { it.contains("log4j", ignoreCase = true) }
 
+        if (!hasUtility || !hasLog4j) {
+            throw ExecutionException(
+                "Ghidra classpath looks incomplete (Utility/log4j). " +
+                    "Open the Ghidra facet and re-apply so all module libs are added."
+            )
+        }
         return javaParameters
     }
 

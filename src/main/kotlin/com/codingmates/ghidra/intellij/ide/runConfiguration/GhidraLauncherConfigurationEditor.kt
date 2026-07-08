@@ -11,7 +11,6 @@ import com.intellij.ui.dsl.builder.panel
 import org.jetbrains.annotations.Nullable
 import javax.swing.JCheckBox
 import javax.swing.JComponent
-import javax.swing.JTextField
 
 
 class GhidraLauncherConfigurationEditor(project: Project) : SettingsEditor<GhidraLauncherConfiguration>(),
@@ -38,7 +37,7 @@ class GhidraLauncherConfigurationEditor(project: Project) : SettingsEditor<Ghidr
         configuration.alternativeJrePath = jreEditor.jrePathOrName
         configuration.isAlternativeJrePathEnabled = jreEditor.isAlternativeJreSelected
         configuration.setArgs(argEditor.getText())
-        configuration.setHeadless(isHeadless.isSelected())
+        configuration.setHeadless(isHeadless.isSelected)
         configuration.checkConfiguration()
     }
 
